@@ -83,7 +83,23 @@ int* readquery(char* queryfile, int size){
 	return vals;
 }
 
-int similarity(int* vals, int* query, int dictionary_size){
+void insertion_sort(int *arr, int* ids, int length) {
+int i, j ,tmp, tmp2;
+    for (i = 1; i < length; i++) {
+        j = i;
+        while (j > 0 && arr[j - 1] > arr[j]) {
+            tmp2 = ids[j];
+            ids[j] = ids[j-1];
+            ids[j-1] = tmp2;
+            tmp = arr[j];
+            arr[j] = arr[j - 1];
+            arr[j - 1] = tmp;
+            j--;
+        }
+    }
+}
+
+int similarity(int* vals, int* query, int size){
 	int sim = 0;
 	int i;
 	for(i = 0; i < size; i++){
@@ -92,15 +108,16 @@ int similarity(int* vals, int* query, int dictionary_size){
 	return ((int)sim);
 }
 
-struct node* readfile(char* filename, int* query, int dictionary_size, ){
+struct node* readfile(char* filename, int* query, int dictionary_size, int* size){
 	FILE *fp = fopen(filename, "r");
 	int* len = 0;
     char* line = NULL;
-    int count = 0;
+    // int count = 0;
     int num = 0;
     int i;
+    size = 0;
     int cursim;
-    int *vals = (int*)malloc(size* sizeof(int));
+    int *vals = (int*)malloc(dictionary_size * sizeof(int));
     struct node * root = (struct node *)malloc(sizeof(struct node*));
     struct node * ptr = root;
 	while ((getline(&line, &len, fp)) != -1){
@@ -110,18 +127,21 @@ struct node* readfile(char* filename, int* query, int dictionary_size, ){
 			// printf("Token %d is %s\n", i, tokens[i]);
 		// }
 		ptr->id = atoi(tokens[0]);
-		for(i = 0; i < size; i++){
+		for(i = 0; i < num - 1; i++){
 			vals[i] = atoi(tokens[i+1]);
 		}
-		cursim = similarity(vals, query, size);
+		cursim = similarity(vals, query, dictionary_size);
 		ptr->similarity = cursim;
 
 		ptr->next = (struct node*)malloc(sizeof(struct node*));
 		ptr = ptr->next;
+        printf("Current line %s\n", line);
+        size += 1;
 		free(tokens);
 
 	}
 	fclose(fp);
+    printf("size in readfile %d\n", size);
 
 	return root;
 }
