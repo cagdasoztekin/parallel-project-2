@@ -116,6 +116,7 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* size
     int num = 0;
     int i;
     size = 0;
+    printf("Size comes as %d\n", size);
     int cursim;
     int *vals = (int*)malloc(dictionary_size * sizeof(int));
     struct node * root = (struct node *)malloc(sizeof(struct node*));
