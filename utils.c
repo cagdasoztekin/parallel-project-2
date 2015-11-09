@@ -108,16 +108,16 @@ int similarity(int* vals, int* query, int size){
 	return ((int)sim);
 }
 
-struct node* readfile(char* filename, int* query, int dictionary_size, int* size){
+struct node* readfile(char* filename, int* query, int dictionary_size, int* list_size){
 	FILE *fp = fopen(filename, "r");
 	int* len = 0;
     char* line = NULL;
     // int count = 0;
     int num = 0;
     int i;
-    size = 0;
+    list_size = 0;
     int count = 0;
-    printf("Size comes as %d\n", size);
+    printf("Size comes as %d\n", list_size);
     int cursim;
     int *vals = (int*)malloc(dictionary_size * sizeof(int));
     struct node * root = (struct node *)malloc(sizeof(struct node*));
@@ -138,14 +138,16 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* size
 		ptr->next = (struct node*)malloc(sizeof(struct node*));
 		ptr = ptr->next;
         printf("Current line %s\n", line);
-        size += 1;
+        list_size += 1;
         count++;
 		free(tokens);
 
 	}
 	fclose(fp);
     printf("count is %d\n", count);
-    printf("size in readfile %d\n", size);
+    list_size = count;
+    printf("size in readfile %d\n", list_size);
+    // size = count;
 
 	return root;
 }
