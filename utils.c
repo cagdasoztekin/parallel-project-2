@@ -37,7 +37,7 @@ char** str_split( char* str, char delim, int* numSplits )
             c++;
         } while ( *c != '\0' );
 
-        ret = malloc( ( retLen + 1 ) * sizeof( *ret ) );
+        ret = (char**)malloc( ( retLen + 1 ) * sizeof( *ret ) );
         ret[retLen] = NULL;
 
         c = str;
