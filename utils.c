@@ -116,6 +116,7 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* size
     int num = 0;
     int i;
     size = 0;
+    int count = 0;
     printf("Size comes as %d\n", size);
     int cursim;
     int *vals = (int*)malloc(dictionary_size * sizeof(int));
@@ -138,10 +139,12 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* size
 		ptr = ptr->next;
         printf("Current line %s\n", line);
         size += 1;
+        count++;
 		free(tokens);
 
 	}
 	fclose(fp);
+    printf("count is %d\n", count);
     printf("size in readfile %d\n", size);
 
 	return root;
