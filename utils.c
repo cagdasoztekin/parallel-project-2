@@ -138,12 +138,12 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* list
 		ptr = ptr->next;
         printf("Current line %s\n", line);
         (*list_size) += 1;
-        count++;
+        // count++;
 		free(tokens);
 
 	}
 	fclose(fp);
-    printf("count is %d\n", count);
+    // printf("count is %d\n", count);
     // list_size = count;
     printf("size in readfile %d\n", (*list_size));
     // size = count;
