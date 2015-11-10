@@ -135,6 +135,8 @@ int main(int argc, char** argv){
 		int	k= atoi(argv[2]);
 		int *leastk = (int*)malloc(k * sizeof(int));
 		if(my_rank == 0){
+			double serialstart, serialend, parallelend;
+			serialstart = MPI_Wtime();
 			int dictionary_size 	= atoi(argv[1]);
 			char* document_path 	= argv[3];
 			char* query_path		= argv[4];
@@ -143,6 +145,7 @@ int main(int argc, char** argv){
 			// the linked list, holds the id's and the similarity values in seqeunce
 			// and the list_size will hold the size of the list after readfile function returns
 			struct node* ptr = readfile(document_path, query, dictionary_size, &list_size);
+			struct node* root = ptr;
 			int i;
 			
 			int *myvals = (int*)malloc(list_size * sizeof(int));
@@ -155,19 +158,28 @@ int main(int argc, char** argv){
 				ptr = ptr->next;
 			}
 
+			// put a barrier before calling kreduce, up to this point things were in serial
+			MPI_Barrier(MPI_COMM_WORLD);
+			serialend = MPI_Wtime();
 			// call kreduce
 			kreduce(leastk, myids, myvals, k, world_size, my_rank);
+			// parallel part is over
+			MPI_Barrier(MPI_COMM_WORLD);
+			parallelend = MPI_Wtime();
 
 			// the result is here
 			for(i = 0; i < k; i++){
 				printf("Least k %d is with id %d\n", i, leastk[i]);
 			}
-			// call barrier before freeing mutual
-			MPI_Barrier(MPI_COMM_WORLD);
+			printf("Serial Runtime: %f\n", serialend-serialstart);
+			printf("Parallel Runtime: %f\n", parallelend-serialend);
+			
+			
 			free(leastk);
-			// free(myids);
-			// free(myvals);
-			// freelist(ptr);
+			free(myids);
+			free(myvals);
+			// free the linked list
+			freelist(root);
 
 		}
 		else{
@@ -175,7 +187,11 @@ int main(int argc, char** argv){
 			int *myids = (int*)malloc(k * sizeof(int));
 			// no memory allocation for leastk, slave processors will not be using that
 			int *leastk;
+			// put a barrier before calling kreduce 
+			MPI_Barrier(MPI_COMM_WORLD);
+			// call kreduce from the slaves
 			kreduce(leastk, myids, myvals, k, world_size, my_rank);
+			// put a barrier, end of the parallel part and then free the allocated memory space
 			MPI_Barrier(MPI_COMM_WORLD);
 			free(leastk);
 			free(myids);

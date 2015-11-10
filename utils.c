@@ -4,14 +4,9 @@
 
 #include "utils.h"
 
-// struct node{
-// 	// int id;
-// 	int *vals;
-// 	struct node* next;
-// };
-
+// function to free the list whose root is given
 void freelist(struct node* root){
-    while(root != NULL){
+    while(root->next != NULL){
         struct node * tmp = root;
         root = root->next;
         free(tmp);
@@ -67,6 +62,7 @@ char** str_split( char* str, char delim, int* numSplits ) {
     return ret;
 }
 
+// read the query file and return the vector of words as an integer array
 int* readquery(char* queryfile, int size){
     FILE *fp = fopen(queryfile, "r");
     int* len = 0;
@@ -86,8 +82,11 @@ int* readquery(char* queryfile, int size){
     return vals;
 }
 
+// insertion sorts two given arrays basing on the values of the first array
+// so for arguments (vals, ids, length) it sorts the length portion of the given vals array
+// and swaps the corresponding id's as well
 void insertion_sort(int *arr, int* ids, int length) {
-int i, j ,tmp, tmp2;
+    int i, j ,tmp, tmp2;
     for (i = 1; i < length; i++) {
         j = i;
         while (j > 0 && arr[j - 1] > arr[j]) {
@@ -102,6 +101,7 @@ int i, j ,tmp, tmp2;
     }
 }
 
+// find the similarity of a document with the queried document
 int similarity(int* vals, int* query, int size){
     int sim = 0;
     int i;
@@ -111,6 +111,7 @@ int similarity(int* vals, int* query, int size){
     return ((int)sim);
 }
 
+// read values of documents from a file, calculate similaties and return as a linked list
 struct node* readfile(char* filename, int* query, int dictionary_size, int* list_size){
     FILE *fp = fopen(filename, "r");
     int* len = 0;
@@ -134,6 +135,7 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* list
         for(i = 0; i < num - 1; i++){
             vals[i] = atoi(tokens[i+1]);
         }
+        // calculate the similarity and put it in the node
         cursim = similarity(vals, query, dictionary_size);
         ptr->similarity = cursim;
 
