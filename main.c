@@ -168,12 +168,14 @@ int main(int argc, char** argv){
 			parallelend = MPI_Wtime();
 
 			// the result is here
-			for(i = 0; i < k; i++){
-				printf("Least k %d is with id %d\n", i, leastk[i]);
-			}
-			printf("Serial Runtime: %f\n", serialend-serialstart);
-			printf("Parallel Runtime: %f\n", parallelend-serialend);
 			
+			printf("Sequential Part: %.2f ms\n\n", 1000*(serialend-serialstart));
+			printf("Parallel Part: %.2f ms\n\n", 1000*(parallelend-serialend));
+			printf("Total time: %.2f ms\n\n", 1000*(parallelend-serialstart));
+			printf("Least k = %d ids:\n\n", k);
+			for(i = 0; i < k; i++){
+				printf("%d\n\n", leastk[i]);
+			}
 			
 			// free(leastk);
 			// free(myids);
