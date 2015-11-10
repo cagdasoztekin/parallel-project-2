@@ -142,6 +142,7 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* list
         ptr->next = (struct node*)malloc(sizeof(struct node*));
         ptr = ptr->next;
 
+        // increment list_size
         (*list_size) += 1;
         // count++;
         free(tokens);
