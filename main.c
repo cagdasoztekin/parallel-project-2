@@ -175,9 +175,9 @@ int main(int argc, char** argv){
 			printf("Parallel Runtime: %f\n", parallelend-serialend);
 			
 			
-			free(leastk);
-			free(myids);
-			free(myvals);
+			// free(leastk);
+			// free(myids);
+			// free(myvals);
 			// free the linked list
 			// freelist(root);
 
@@ -193,7 +193,7 @@ int main(int argc, char** argv){
 			kreduce(leastk, myids, myvals, k, world_size, my_rank);
 			// put a barrier, end of the parallel part and then free the allocated memory space
 			MPI_Barrier(MPI_COMM_WORLD);
-			free(leastk);
+			// free(leastk);
 			// free(myids);
 			// free(myvals);
 
