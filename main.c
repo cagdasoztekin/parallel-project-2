@@ -194,8 +194,8 @@ int main(int argc, char** argv){
 			// put a barrier, end of the parallel part and then free the allocated memory space
 			MPI_Barrier(MPI_COMM_WORLD);
 			free(leastk);
-			free(myids);
-			free(myvals);
+			// free(myids);
+			// free(myvals);
 
 		}
 	}
