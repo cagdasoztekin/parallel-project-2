@@ -7,11 +7,11 @@
 
 
 
-void kreduce(int * leastk, int * myids, int * myvals, int k, int world_size, int my_rank){
+void kreduce(int * leastk, int * myids, unsigned long long int * myvals, int k, int world_size, int my_rank){
 	if(my_rank == 0){
 		int i;
 		int j;
-		int **leastkvals = (int**)malloc(world_size * sizeof(int*));
+		unsigned long long int **leastkvals = (unsigned long long int**)malloc(world_size * sizeof(unsigned long long int*));
 		int **leastkids = (int**)malloc(world_size * sizeof(int*));
 		// printf("K is %d\n", k);
 		// for(i = 0; i < k * world_size; i++){
@@ -19,19 +19,19 @@ void kreduce(int * leastk, int * myids, int * myvals, int k, int world_size, int
 		// }
 
 		for(i = 0; i < world_size; i++){
-			leastkvals[i] = (int*)malloc(k * sizeof(int));
+			leastkvals[i] = (unsigned long long int*)malloc(k * sizeof(unsigned long long int));
 			leastkids[i] = (int*)malloc(k * sizeof(int));
 		}
 		for(i = 1; i < world_size; i++){
 			MPI_Send(myids+(k*i), k, MPI_INT, i, 0, MPI_COMM_WORLD);
-			MPI_Send(myvals+(k*i), k, MPI_INT, i, 1, MPI_COMM_WORLD);
+			MPI_Send(myvals+(k*i), k, MPI_UNSIGNED_LONG, i, 1, MPI_COMM_WORLD);
 		}
 		insertion_sort(myvals, myids, k);
 		leastkvals[0] = myvals;
 		leastkids[0] = myids;
 		for(i = 1; i < world_size; i++){
 			MPI_Recv(leastkids[i], k, MPI_INT, i, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			MPI_Recv(leastkvals[i], k, MPI_INT, i, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(leastkvals[i], k, MPI_UNSIGNED_LONG, i, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		}
 		// for(i = 0; i < world_size; i++){
 			// for(j = 0; j < k; j++){
@@ -39,7 +39,7 @@ void kreduce(int * leastk, int * myids, int * myvals, int k, int world_size, int
 			// }
 		// }
 
-		int* leastval = (int*)malloc(k * sizeof(int));
+		unsigned long long int* leastval = (unsigned long long int*)malloc(k * sizeof(unsigned long long int));
 		int* leastid  = (int*)malloc(k * sizeof(int));
 
 		int change = 1;
@@ -121,7 +121,7 @@ int main(int argc, char** argv){
 			struct node* ptr = readfile(document_path, query, dictionary_size, &list_size);
 			int i;
 			
-			int *myvals = (int*)malloc(list_size * sizeof(int));
+			unsigned long long int *myvals = (unsigned long long int*)malloc(list_size * sizeof(unsigned long long int));
 			int *myids = (int*)malloc(list_size * sizeof(int)); 
 			// printf("List size is %d\n", list_size);
 			for(i = 0; i < list_size; i++){
@@ -144,7 +144,7 @@ int main(int argc, char** argv){
 
 		}
 		else{
-			int *myvals = (int*)malloc(k * sizeof(int));
+			unsigned long long int *myvals = (unsigned long long int*)malloc(k * sizeof(unsigned long long int));
 			int *myids = (int*)malloc(k * sizeof(int));
 			// no memory allocation for leastk, slave processors will not be using that
 			int *leastk;
