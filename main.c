@@ -179,7 +179,7 @@ int main(int argc, char** argv){
 			free(myids);
 			free(myvals);
 			// free the linked list
-			freelist(root);
+			// freelist(root);
 
 		}
 		else{
