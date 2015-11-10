@@ -86,9 +86,8 @@ int* readquery(char* queryfile, int size){
     return vals;
 }
 
-void insertion_sort(unsigned long int *arr, int* ids, int length) {
-    int i, j ,tmp2;
-    unsigned long tmp;
+void insertion_sort(int *arr, int* ids, int length) {
+int i, j ,tmp, tmp2;
     for (i = 1; i < length; i++) {
         j = i;
         while (j > 0 && arr[j - 1] > arr[j]) {
@@ -103,13 +102,13 @@ void insertion_sort(unsigned long int *arr, int* ids, int length) {
     }
 }
 
-unsigned long int similarity(int* vals, int* query, int size){
-    unsigned long int sim = 0;
+int similarity(int* vals, int* query, int size){
+    int sim = 0;
     int i;
     for(i = 0; i < size; i++){
         sim += pow(vals[i], query[i]);
     }
-    return ((unsigned long int)sim);
+    return ((int)sim);
 }
 
 struct node* readfile(char* filename, int* query, int dictionary_size, int* list_size){
@@ -121,7 +120,7 @@ struct node* readfile(char* filename, int* query, int dictionary_size, int* list
     int i;
     (*list_size) = 0;
     // printf("Size comes as %d\n", (*list_size));
-    unsigned long int cursim;
+    int cursim;
     int *vals = (int*)malloc(dictionary_size * sizeof(int));
     struct node * root = (struct node *)malloc(sizeof(struct node*));
     struct node * ptr = root;
